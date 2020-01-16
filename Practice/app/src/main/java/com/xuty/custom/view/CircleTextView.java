@@ -21,6 +21,8 @@ public class CircleTextView extends View {
     private Context context;
     private  int innerColor;
     private int strokeColor;
+    private int currentProgress;
+    private long totalTime;
 
 
     public CircleTextView(Context context) {
@@ -86,7 +88,7 @@ public class CircleTextView extends View {
            width = height;
        }
 
-       paint.setColor(Color.BLUE);
+        paint.setColor(Color.BLUE);
         canvas.drawCircle(width/2,width/2,300,paint);
         paint.setColor(Color.GREEN);
 
@@ -98,5 +100,26 @@ public class CircleTextView extends View {
         int textBaseY = centerHeight+(fontMetricsInt.bottom-fontMetricsInt.top)/2 -fontMetricsInt.bottom;
         canvas.drawText(text,textBaseX,textBaseY,paint);
 
+       // canvas.drawArc();
+
+
     }
+
+    public void startDrawProgress(){
+        currentProgress = 0;
+        post(drawProgress);
+    }
+
+    Runnable drawProgress = new Runnable() {
+        @Override
+        public void run() {
+           currentProgress++;
+           invalidate();
+           postDelayed(drawProgress,totalTime/100);
+        }
+    };
+
+
+
+
 }
