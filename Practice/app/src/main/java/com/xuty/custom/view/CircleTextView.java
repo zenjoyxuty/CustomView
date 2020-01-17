@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -89,7 +90,8 @@ public class CircleTextView extends View {
        }
 
         paint.setColor(Color.BLUE);
-        canvas.drawCircle(width/2,width/2,300,paint);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(width/2,width/2,width/2,paint);
         paint.setColor(Color.GREEN);
 
         Paint.FontMetricsInt fontMetricsInt = paint.getFontMetricsInt();
@@ -99,9 +101,13 @@ public class CircleTextView extends View {
         int centerHeight = getHeight()/2;
         int textBaseY = centerHeight+(fontMetricsInt.bottom-fontMetricsInt.top)/2 -fontMetricsInt.bottom;
         canvas.drawText(text,textBaseX,textBaseY,paint);
+        paint.setStyle(Paint.Style.STROKE);
 
+        paint.setColor(Color.YELLOW);
        // canvas.drawArc();
+        RectF rectF = new RectF(0,0,getWidth(),getHeight());
 
+        canvas.drawArc(rectF,-90,360*currentProgress/100,false,paint);
 
     }
 
@@ -114,6 +120,10 @@ public class CircleTextView extends View {
         @Override
         public void run() {
            currentProgress++;
+           if(currentProgress==100){
+               removeCallbacks(drawProgress);
+               return;
+           }
            invalidate();
            postDelayed(drawProgress,totalTime/100);
         }
